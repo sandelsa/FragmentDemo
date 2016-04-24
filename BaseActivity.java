@@ -1,7 +1,9 @@
 package com.example.springroll.database;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.usage.UsageEvents;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.RectF;
@@ -21,6 +23,7 @@ import com.example.springroll.database.SignIn.SignInActivity;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
+import java.util.UUID;
 
 import library.CalendarAPI.DateTimeInterpreter;
 import library.CalendarAPI.MonthLoader;
@@ -34,21 +37,26 @@ import library.UserFunctions;
  * Created by Raquib-ul-Alam Kanak on 1/3/2014.
  * Website: http://alamkanak.github.io
  */
-public abstract class BaseActivity extends AppCompatActivity implements WeekView.EventClickListener, MonthLoader.MonthChangeListener, WeekView.EventLongPressListener, WeekView.EmptyViewLongPressListener, DialogInterface.OnClickListener {
+public abstract class BaseActivity extends SingleFragmentActivity implements WeekView.EventClickListener, MonthLoader.MonthChangeListener, WeekView.EventLongPressListener, WeekView.EmptyViewLongPressListener, DialogInterface.OnClickListener {
     private static final int TYPE_DAY_VIEW = 1;
     private static final int TYPE_THREE_DAY_VIEW = 2;
     private static final int TYPE_WEEK_VIEW = 3;
     private int mWeekViewType = TYPE_THREE_DAY_VIEW;
     private WeekView mWeekView;
     private UserFunctions mFunction;
-    private Button button;
-    private FragmentManager fm;
+    //private Button button;
+    private FragmentManager fm = getFragmentManager();
     //protected abstract Fragment createdFragment();
+
+    protected long clickid;
+   // private static final String EXTRA_ID = "com.example.springroll.database"
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //setHasOptionsMenu(true);
+
         setContentView(R.layout.activity_calander_base);
         //getActionBar().setDisplayHomeAsUpEnabled(true);
         mFunction = new UserFunctions(getApplicationContext());
@@ -87,7 +95,7 @@ public abstract class BaseActivity extends AppCompatActivity implements WeekView
             fm.beginTransaction().add(R.id.fragmentContainer,fragment).commit();
         }*/
 
-        button = (Button)findViewById(R.id.addButton);
+       /* button = (Button)findViewById(R.id.addButton);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -104,7 +112,7 @@ public abstract class BaseActivity extends AppCompatActivity implements WeekView
                 ft.addToBackStack(null);
                 ft.commit();
             }
-        });
+        });*/
     }
 
     @Override
@@ -116,6 +124,7 @@ public abstract class BaseActivity extends AppCompatActivity implements WeekView
     public void onBackPressed(){
         if(fm.getBackStackEntryCount() != 0){
             fm.popBackStack();
+
         }else{
             super.onBackPressed();
         }
@@ -130,6 +139,18 @@ public abstract class BaseActivity extends AppCompatActivity implements WeekView
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
+
+    }
+
+    @Override//ignore
+    public boolean onPrepareOptionsMenu(Menu menu){
+        if(fm.getBackStackEntryCount() == 0 || fm.getBackStackEntryAt(fm.getBackStackEntryCount()-1) instanceof BasicActivity) {
+            getMenuInflater().inflate(R.menu.menu_main, menu);
+            return true;
+        }else{
+            getMenuInflater().inflate(R.menu.menu_frag, menu);
+            return true;
+        }
     }
 
     @Override
@@ -202,10 +223,22 @@ public abstract class BaseActivity extends AppCompatActivity implements WeekView
 
             //Menu option add event
             case R.id.action_add_event:
-                Intent addEvent = new Intent(getApplicationContext(),EventActivity.class);
-                addEvent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(addEvent);
-                return true;
+                fm = getFragmentManager();
+                Fragment f = fm.findFragmentById(R.id.fragmentContainer);
+
+                if(f == null){//pass in event w/ defualt values
+                    f = EventActivity.newInstance(new WeekViewEvent(3244, "", 2016, 1, 1, 0, 0, 2016, 1, 1, 0, 0));
+                    // fm.beginTransaction().add(R.id.fragmentContainer,f).commit();
+                }
+
+                android.app.FragmentTransaction ft = fm.beginTransaction();
+                ft.add(R.id.fragmentContainer, f);
+                ft.addToBackStack(null);
+                ft.commit();
+               // Intent addEvent = new Intent(getApplicationContext(),EventActivity.class);
+               // addEvent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+               // startActivity(addEvent);
+               // return true;
 
           /*  case R.id.addButton:
                 Intent adEvent = new Intent(getApplicationContext(),Blank_Frag.class);
@@ -252,6 +285,22 @@ public abstract class BaseActivity extends AppCompatActivity implements WeekView
 
     @Override
     public void onEventClick(WeekViewEvent event, RectF eventRect) {
+        clickid = event.getId();
+
+        fm = getFragmentManager();
+        Fragment f = fm.findFragmentById(R.id.fragmentContainer);
+
+        if(f == null){
+            f = EventActivity.newInstance(event);
+            // fm.beginTransaction().add(R.id.fragmentContainer,f).commit();
+        }
+
+        android.app.FragmentTransaction ft = fm.beginTransaction();
+        ft.add(R.id.fragmentContainer, f);
+        ft.addToBackStack(null);
+        ft.commit();
+
+
         Toast.makeText(this, "Clicked " + event.getName(), Toast.LENGTH_SHORT).show();
     }
 

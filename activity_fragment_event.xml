@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:weightSum="1">
+    android:orientation="vertical">
 
     <ScrollView
         android:layout_width="fill_parent"
@@ -52,7 +51,8 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/switch1" android:checked="false"
                     android:layout_centerVertical="true"
-                    android:layout_alignParentEnd="true" /> <!--android:background="@drawable/shape_switch" -->
+                    android:layout_alignParentEnd="true"
+                 /> <!--android:background="@drawable/shape_switch" -->
 
             </RelativeLayout>
 
@@ -118,70 +118,202 @@
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content">
+
+                <RelativeLayout
+                    android:layout_width="374dp"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:textSize="16sp" android:padding="10dp" android:layout_gravity="start"
+                        android:text="Days" android:id="@+id/textViewRepeat"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentStart="true" />
+
+                    <CheckBox
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/mon"
+                        android:text="M"
+                        android:textSize="8sp"
+                        android:scaleX="0.95"
+                        android:scaleY="0.95"
+                        android:layout_alignBottom="@+id/textViewRepeat"
+                        android:layout_toEndOf="@+id/textViewRepeat" />
+
+                    <CheckBox
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/tue"
+                        android:text="T"
+                        android:textSize="8sp"
+                        android:scaleX="0.95"
+                        android:scaleY="0.95"
+                        android:layout_alignBottom="@+id/textViewRepeat"
+                        android:layout_toEndOf="@+id/mon" />
+
+                    <CheckBox
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/wed"
+                        android:text="W"
+                        android:textSize="8sp"
+                        android:scaleX="0.95"
+                        android:scaleY="0.95"
+                        android:layout_alignBottom="@+id/textViewRepeat"
+                        android:layout_toEndOf="@+id/tue" />
+
+                    <CheckBox
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/thu"
+                        android:text="R"
+                        android:textSize="8sp"
+                        android:scaleX="0.95"
+                        android:scaleY="0.95"
+                        android:layout_alignBottom="@+id/textViewRepeat"
+                        android:layout_toEndOf="@+id/wed" />
+
+                    <CheckBox
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/fri"
+                        android:text="F"
+                        android:textSize="8sp"
+                        android:scaleX="0.95"
+                        android:scaleY="0.95"
+                        android:layout_alignTop="@+id/thu"
+                        android:layout_toEndOf="@+id/thu" />
+
+                    <CheckBox
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/sat"
+                        android:text="S"
+                        android:textSize="8sp"
+                        android:scaleX="0.95"
+                        android:scaleY="0.95"
+                        android:layout_above="@+id/radioGroop"
+                        android:layout_toEndOf="@+id/fri" />
+
+                    <CheckBox
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/sun"
+                        android:text="Su"
+                        android:textSize="8sp"
+                        android:scaleX="0.95"
+                        android:scaleY="0.95"
+                        android:layout_above="@+id/radioGroop"
+                        android:layout_alignEnd="@+id/radioGroop" />
+
+                    <TextView
+                        android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:textSize="16sp" android:padding="10dp" android:layout_gravity="start"
+                        android:text="Priority" android:id="@+id/prioritystr"
+                        android:layout_below="@id/textViewRepeat"
+                        android:layout_alignParentStart="true" />
+
+
+                    <RadioGroup
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:id="@+id/radioGroop"
+                        android:layout_below="@+id/mon"
+                        android:layout_toRightOf="@id/prioritystr">
+
+
+                        <RadioButton
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/radio0"
+                            android:text="0"
+                            android:layout_below="@+id/mon"
+                            android:layout_toEndOf="@+id/prioritystr"/>
+
+                        <RadioButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/radio1"
+                        android:text="1"
+                            android:layout_below="@+id/textViewRepeat"
+                            android:layout_toEndOf="@+id/radio0"/>
+
+                        <RadioButton
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/radio2"
+                            android:text="2"
+                            android:layout_alignParentBottom="true"
+                            android:layout_toEndOf="@+id/radio1"/>
+
+                        <RadioButton
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/radio3"
+                            android:text="3"
+                            android:layout_below="@+id/thu"
+                            android:layout_toEndOf="@+id/radio2"/>
+
+                        <RadioButton
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/radio4"
+                            android:text="4"
+                            android:layout_below="@+id/fri"
+                            android:layout_toEndOf="@+id/radio3"/>
+
+                        <RadioButton
+                            android:layout_width="53dp"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/radio5"
+                            android:text="5"
+                            android:layout_below="@+id/fri"
+                            android:layout_toEndOf="@+id/radio4"/>
+                    </RadioGroup>
+
+
+                </RelativeLayout>
             </LinearLayout>
 
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/main_background">
+
+                <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/notescroll"
+                    android:hint="Notes"
+                    android:padding="10dp"
+                    android:inputType="textMultiLine"
+                    android:enabled="true"
+                    android:maxLines="4"
+                    android:minLines="4"
+                    android:isScrollContainer="true"
+                    android:focusable="true"
+                    android:background="@color/authentication_background"
+                    android:layout_gravity="start"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentStart="true" />
+
+            </RelativeLayout>
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/delButton"
+                android:text="Delete"/>
 
 
         </LinearLayout>
 
     </ScrollView>
 
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="95dp"
-        android:layout_gravity="right"
-        android:background="@color/main_background">
-
-        <TextView
-            android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:textSize="20sp" android:padding="10dp" android:layout_gravity="start"
-            android:text="Repeat" android:id="@+id/textViewRepeat" />
-
-        <Spinner
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/spinner" android:prompt="@string/spinner_repeat_title"
-            android:layout_toEndOf="@+id/textViewRepeat"
-            android:layout_alignBottom="@+id/textViewRepeat" />
-
-        <TextView
-            android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:textSize="18sp" android:padding="10dp" android:layout_gravity="start"
-            android:text="Priority" android:id="@+id/prioritystr"
-            android:layout_below="@+id/spinner" />
-
-        <RatingBar
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/ratingBar"
-            android:numStars="5"
-            android:rating="1"
-            android:stepSize="1"
-            android:layout_gravity="center_horizontal"
-            android:layout_alignTop="@+id/prioritystr"
-            android:layout_toEndOf="@+id/textViewRepeat" />
 
 
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/main_background">
-
-        <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/notescroll"
-            android:scrollbars="vertical"
-            android:hint="Notes"
-            android:padding="10dp"
-            android:layout_gravity="start"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentStart="true" />
-
-    </RelativeLayout>
 
 </LinearLayout>

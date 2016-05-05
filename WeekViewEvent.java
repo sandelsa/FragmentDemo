@@ -26,6 +26,7 @@ public class WeekViewEvent {
     private String mRepeat;
     private ArrayList<Integer> mRemindHr;
     private ArrayList<Integer> mRemindMin;
+    int mCrs;
 
     /**
      * Empty constructor
@@ -41,6 +42,7 @@ public class WeekViewEvent {
         mPriority = 3;
         mNotes = "";
         mRepeat = "";
+        mCrs = 0;
 
         mRemindHr = new ArrayList<Integer>();
         mRemindMin = new ArrayList<Integer>();
@@ -82,6 +84,8 @@ public class WeekViewEvent {
         this.mName = name;
         mPriority = 3;
         mNotes = "";
+        mCrs = 0;
+
         mRepeat = "";
 
         mRemindHr = new ArrayList<Integer>();
@@ -109,6 +113,8 @@ public class WeekViewEvent {
         mPriority = 3;
         mNotes = "";
         mRepeat = "";
+        mCrs = 0;
+
 
         mRemindHr = new ArrayList<Integer>();
         mRemindMin = new ArrayList<Integer>();
@@ -144,6 +150,9 @@ public class WeekViewEvent {
     //           Getter and Setter
     //
     /////////////////////////////////////////////
+    public int getmCrs(){return mCrs;}
+
+    public void setmCrs(int c){mCrs = c;}
 
     public int getmHr(int index){return mRemindHr.get(index);}
 

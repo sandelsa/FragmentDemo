@@ -72,12 +72,12 @@ public class EventFragment extends Fragment implements DateTimePickerDialog.Date
     private EditText mTitle, mLocation, mNotes;
     private Switch mAllDaySwitch;
     private Calendar calendar, mFromDate, mToDate;
-    private int year, month, day, hour,minute,am_pm = -2;
+    private int year, month, col, day, hour,minute,am_pm = -2;
     //private RatingBar mPriority;
     private RadioGroup mPriority;
     AlarmSender al;
     //private RadioButton zero, one, two, three, four, five;
-    private CheckBox m,t,w,r,f,a,s;
+    private CheckBox m,t,w,r,f,a,s, crs;
     long eventId;
 
     private boolean edit = false;
@@ -332,11 +332,11 @@ public class EventFragment extends Fragment implements DateTimePickerDialog.Date
         colorButton.setText("Color");
 
         List<String> colorOptions = new ArrayList<String>();
-        colorOptions.add("red");
         colorOptions.add("blue");
+        colorOptions.add("red");
         colorOptions.add("green");
-        colorOptions.add("yellow");
         colorOptions.add("orange");
+        colorOptions.add("yellow");
 
         final ArrayAdapter<String> ad = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item,colorOptions);
 
@@ -347,6 +347,19 @@ public class EventFragment extends Fragment implements DateTimePickerDialog.Date
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         colorButton.setText(ad.getItem(which));
+
+                        if(which == 0)
+                            mEvent.setColor(R.color.event_color_01);
+                        if(which == 1)
+                            mEvent.setColor(R.color.event_color_02);
+                        if(which == 2)
+                            mEvent.setColor(R.color.event_color_03);
+                        if(which == 3)
+                            mEvent.setColor(R.color.event_color_04);
+                        if(which == 4)
+                            mEvent.setColor(R.color.button);
+
+
                         dialog.dismiss();
                     }
                 }).create().show();
@@ -383,29 +396,35 @@ public class EventFragment extends Fragment implements DateTimePickerDialog.Date
         if(mEvent.getmRepeat().indexOf('S') >= 0 )
             s.setChecked(true);
 
+        crs = (CheckBox)v.findViewById(R.id.courseBox);
+        if(mEvent.getmCrs() == 1){
+            crs.setChecked(true);
+        }
+
+
 
         //String rad = "radio"+mEvent.getmPriority();
         mPriority = (RadioGroup)v.findViewById(R.id.radioGroop);
 
 
-        if(mEvent.getmPriority() == 0)
-             mPriority.check(R.id.radio0);
-
-        if(mEvent.getmPriority() == 1)
+        if(mEvent.getmPriority() == 0) {
+            mPriority.check(R.id.radio0);
+        }
+        if(mEvent.getmPriority() == 1) {
             mPriority.check(R.id.radio1);
-
-        if(mEvent.getmPriority() == 2)
+        }
+        if(mEvent.getmPriority() == 2) {
             mPriority.check(R.id.radio2);
-
-        if(mEvent.getmPriority() == 3)
+        }
+        if(mEvent.getmPriority() == 3) {
             mPriority.check(R.id.radio3);
-
-        if(mEvent.getmPriority() == 4)
+        }
+        if(mEvent.getmPriority() == 4) {
             mPriority.check(R.id.radio4);
-
-        if(mEvent.getmPriority() == 5)
+        }
+        if(mEvent.getmPriority() == 5) {
             mPriority.check(R.id.radio5);
-
+        }
 
         mPriority.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -489,6 +508,11 @@ public class EventFragment extends Fragment implements DateTimePickerDialog.Date
         f.setEnabled(val);
         a.setEnabled(val);
         s.setEnabled(val);
+        deleteButton.setEnabled(val);
+        colorButton.setEnabled(val);
+        addRemButton.setEnabled(val);
+        crs.setEnabled(val);
+        mDoneDateButton.setEnabled(val);
 
         for(int i = 0; i < mPriority.getChildCount(); i++){
             ((RadioButton)mPriority.getChildAt(i)).setEnabled(val);
@@ -539,6 +563,13 @@ public class EventFragment extends Fragment implements DateTimePickerDialog.Date
 
             case R.id.save_event:
                 mSave = true;
+
+                if(crs.isChecked()){
+                    mEvent.setmCrs(1);
+                }else{
+                    mEvent.setmCrs(0);
+                }
+
                 mEvent.setmRepeat(rep());
                 if(NavUtils.getParentActivityIntent(getActivity()) != null){
                     NavUtils.navigateUpFromSameTask(getActivity());

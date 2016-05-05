@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <ScrollView
+    <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content">
 
@@ -15,7 +15,9 @@
             android:background="@color/main_background"
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
-            android:paddingTop="@dimen/activity_vertical_margin">
+            android:paddingTop="@dimen/activity_vertical_margin"
+            android:layout_alignParentStart="true"
+            >
 
             <EditText
                 android:layout_width="fill_parent" android:padding="10dp"
@@ -102,6 +104,36 @@
                     android:id="@+id/end_date_button"
                     android:layout_alignParentTop="true"
                     android:layout_toEndOf="@+id/textViewTo" />
+                <!-- android:background="@drawable/shape_button"-->
+
+                <!-- <Button
+                    style="?android:attr/buttonStyleSmall" android:background="@drawable/shape_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/start_time" android:textSize="17sp"
+                    android:id="@+id/end_time_button"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_toEndOf="@+id/end_date_button" /> -->
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="fill_parent" android:layout_marginTop="5dp"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:layout_width="68dp" android:layout_height="wrap_content"
+                    android:textSize="20sp" android:padding="10dp" android:layout_gravity="start"
+                    android:text="Done" android:id="@+id/textViewDone"
+                    android:layout_marginEnd="5dp"/>
+
+                <Button
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/start_date" android:textSize="17sp"
+                    android:id="@+id/done_date_button"
+                    android:layout_alignParentTop="true"
+                    android:layout_toEndOf="@+id/textViewDone" />
                 <!-- android:background="@drawable/shape_button"-->
 
                 <!-- <Button
@@ -302,18 +334,49 @@
 
             </RelativeLayout>
 
-            <Button
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/delButton"
-                android:text="Delete"/>
 
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <CheckBox
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/courseBox"
+                    android:text="Course?" />
+
+                <Button
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/addReminder"
+                    android:text="Add Reminder"
+                    android:layout_gravity="right"
+                    android:layout_marginLeft="50dp"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/colorSelect"
+                    android:textColor="@color/colorPrimary"
+                    android:background="@drawable/shape_button"
+                    />
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/deleteButton"
+                    android:text="Delete Event"
+                    android:background="@color/error"
+                    android:layout_marginLeft="50dp"/>
+            </LinearLayout>
 
         </LinearLayout>
 
-    </ScrollView>
+    </RelativeLayout>
 
-
-
-
-</LinearLayout>
+</ScrollView>

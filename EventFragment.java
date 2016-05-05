@@ -5,14 +5,25 @@ package com.example.springroll.database;
  */
 
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
+import android.support.v4.app.TaskStackBuilder;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.NotificationCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -21,6 +32,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -30,8 +43,11 @@ import android.widget.RadioGroup;
 import android.widget.RatingBar;
 import android.widget.Scroller;
 import android.widget.Switch;
+import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import library.CalendarAPI.DateTimePickerDialog;
 import library.CalendarAPI.WeekViewEvent;
@@ -52,13 +68,14 @@ public class EventFragment extends Fragment implements DateTimePickerDialog.Date
 
     private boolean mSave = false, mEdit = false, mDelete = false, mCancel = false, mAllDay = false;
     private WeekViewEvent mEvent;
-    private Button mStartDateButton, mEndDateButton, deleteButton;
+    private Button mStartDateButton, mEndDateButton, mDoneDateButton, deleteButton, addRemButton, colorButton;
     private EditText mTitle, mLocation, mNotes;
     private Switch mAllDaySwitch;
     private Calendar calendar, mFromDate, mToDate;
     private int year, month, day, hour,minute,am_pm = -2;
     //private RatingBar mPriority;
     private RadioGroup mPriority;
+    AlarmSender al;
     //private RadioButton zero, one, two, three, four, five;
     private CheckBox m,t,w,r,f,a,s;
     long eventId;
@@ -220,17 +237,58 @@ public class EventFragment extends Fragment implements DateTimePickerDialog.Date
             }
         });
 
-        deleteButton = (Button)v.findViewById(R.id.delButton);
-        deleteButton.setText("Delete");
+        deleteButton = (Button)v.findViewById(R.id.deleteButton);
+
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                getActivity().finish();
+            }
+        });
 
+        mDoneDateButton = (Button)v.findViewById(R.id.done_date_button);
+
+        mDoneDateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDateTimeDialog(mDoneDateButton, am_pm);
+                //mToDate = Calendar.getInstance();
+                mToDate.set(year, month, day, hour, minute);
+                //mToDate.set(Calendar.HOUR_OF_DAY,hour);
+                // mToDate.set(Calendar.MINUTE,minute);
+                /// mToDate.set(Calendar.MONTH,month);
+                // mToDate.set(Calendar.YEAR, year);
+                //mToDate.set(Calendar.DATE,day);
+                //  mEvent.setEndTime(mToDate);
+                if(mToDate.getTimeInMillis() < Calendar.getInstance().getTimeInMillis()){
+                    mSave = false;
+                    mDoneDateButton.setPaintFlags(mEndDateButton.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                }else{
+                    mSave = true;
+                    mDoneDateButton.setPaintFlags(0);
+                }
             }
         });
 
 
 
+        addRemButton = (Button)v.findViewById(R.id.addReminder);
+        addRemButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //FragmentManager fm = getChildFragmentManager();
+                //Fragment fragment = fm.findFragmentById(R.id.remindFragContainer);
+                //if (fragment == null) {
+                   // Fragment fragment = new ReminderFragment();
+                //}
+                //getChildFragmentManager().beginTransaction().add(R.id.remindFragContainer, fragment).commit();
+                Intent i = new Intent(getActivity(), ReminderActivity.class);
+                i.putExtra(ReminderFragment.REMINDER_EVENT_ID, mEvent.getId());
+                startActivity(i);
+
+                // al.cancelAlarm();
+            }
+        });
 
         mAllDaySwitch = (Switch)v.findViewById(R.id.switch1);
         mAllDaySwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -270,32 +328,59 @@ public class EventFragment extends Fragment implements DateTimePickerDialog.Date
             }
         });
 
+        colorButton = (Button)v.findViewById(R.id.colorSelect);
+        colorButton.setText("Color");
+
+        List<String> colorOptions = new ArrayList<String>();
+        colorOptions.add("red");
+        colorOptions.add("blue");
+        colorOptions.add("green");
+        colorOptions.add("yellow");
+        colorOptions.add("orange");
+
+        final ArrayAdapter<String> ad = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item,colorOptions);
+
+        colorButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new AlertDialog.Builder(getActivity()).setTitle("Color").setAdapter(ad, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        colorButton.setText(ad.getItem(which));
+                        dialog.dismiss();
+                    }
+                }).create().show();
+            }
+        });
+
+
+
         m = (CheckBox)v.findViewById(R.id.mon);
-        if(mEvent.getmRepeat().indexOf("M") >= 0 )
+        if(mEvent.getmRepeat().indexOf('M') >= 0 )
             m.setChecked(true);
 
         t = (CheckBox)v.findViewById(R.id.tue);
-        if(mEvent.getmRepeat().indexOf("T") >= 0 )
+        if(mEvent.getmRepeat().indexOf('T') >= 0 )
             t.setChecked(true);
 
         w = (CheckBox)v.findViewById(R.id.wed);
-        if(mEvent.getmRepeat().indexOf("W") >= 0 )
+        if(mEvent.getmRepeat().indexOf('W') >= 0 )
             w.setChecked(true);
 
         r = (CheckBox)v.findViewById(R.id.thu);
-        if(mEvent.getmRepeat().indexOf("R") >= 0 )
+        if(mEvent.getmRepeat().indexOf('R') >= 0 )
             r.setChecked(true);
 
         f = (CheckBox)v.findViewById(R.id.fri);
-        if(mEvent.getmRepeat().indexOf("F") >= 0 )
+        if(mEvent.getmRepeat().indexOf('F') >= 0 )
             f.setChecked(true);
 
         a = (CheckBox)v.findViewById(R.id.sat);
-        if(mEvent.getmRepeat().indexOf("A") >= 0 )
+        if(mEvent.getmRepeat().indexOf('A') >= 0 )
             a.setChecked(true);
 
         s = (CheckBox)v.findViewById(R.id.sun);
-        if(mEvent.getmRepeat().indexOf("S") >= 0 )
+        if(mEvent.getmRepeat().indexOf('S') >= 0 )
             s.setChecked(true);
 
 
@@ -375,14 +460,15 @@ public class EventFragment extends Fragment implements DateTimePickerDialog.Date
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
         if(mSave) {
-            menu.findItem(R.id.delete_event).setVisible(false);
+           // menu.findItem(android.R.id.home).setVisible(true);
+            //menu.findItem(R.id.delete_event).setVisible(false);
             menu.findItem(R.id.edit_event).setVisible(false);
             menu.findItem(R.id.cancel_event).setVisible(true);
             menu.findItem(R.id.save_event).setVisible(true);
         }
         else {
             //menu.findItem(android.R.id.home).setVisible(false);
-            menu.findItem(R.id.delete_event).setVisible(false);
+            //menu.findItem(R.id.delete_event).setVisible(false);
             menu.findItem(R.id.edit_event).setVisible(true);
             menu.findItem(R.id.cancel_event).setVisible(false);
             menu.findItem(R.id.save_event).setVisible(false);
@@ -544,6 +630,8 @@ public class EventFragment extends Fragment implements DateTimePickerDialog.Date
             this.minute = min;
             this.am_pm = am_pm;
         }
+
+
     }
 
 }
